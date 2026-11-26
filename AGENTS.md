@@ -24,6 +24,9 @@ Neon OLTP + 3 lotes (CSV, JSON Lines, CSV regional) + catálogos xlsx
 → modelo estrella → Neon `dw` → API Gateway (HTTP API) + Lambda `api_kpis` → tablero web en Vercel.
 
 Orquestación: Step Functions `pipeline_retail` + DynamoDB `etl_control`.
+Alertas: tema SNS `ceiba-alertas` (módulo observability) con suscripción por correo; lo usan los budgets y el pipeline cuando falla.
+Usuarios del tablero (PDF pág. 8): gerente general (país), gerente de zona y administrador de tienda.
+Fuente de verdad de los diagramas: `Proyecto final · Lakehouse retail en AWS.pdf` (19 páginas); la pág. 9 tiene la arquitectura de servicios completa.
 Infraestructura: Terraform en `infra/` con 8 módulos: security, storage, catalog, ingestion, etl, orchestration, api, observability.
 Región: `us-east-1`. Sin VPC.
 

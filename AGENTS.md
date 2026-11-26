@@ -13,7 +13,7 @@ Proyecto universitario FCPD: Lakehouse retail "Ceiba" en AWS.
 | Andres Benitez | Neon dw, API y tablero | Hades0131 |
 
 Entregas: Avance 1 el 30-nov-2026, Avance 2 el 02-dic-2026, sustentación el 09-dic-2026.
-Tareas: GitHub Projects del repo (https://github.com/users/JsLealM/projects/1). Plan completo en `docs/plan_proyecto.md`.
+Tareas: GitHub Projects del repo (https://github.com/users/JsLealM/projects/1). Cada issue trae objetivo, pasos, criterio de terminado, dependencias y preguntas de sustentación: léelo completo antes de empezar. Plan completo en `docs/plan_proyecto.md`.
 
 ## Arquitectura fija (no cambiarla sin preguntar)
 
@@ -41,6 +41,24 @@ Región: `us-east-1`. Sin VPC.
 - La cuenta solo permite 1 proyecto: NUNCA cerrar el proyecto "LakeHouse".
 - En el plan gratuito, activar AWS Organizations o IAM Identity Center borra los créditos: no hacerlo.
 - El MFA del propietario está en su perfil de AWS (Builder ID), no en IAM.
+
+## Convenciones de nombres (usarlas siempre)
+
+| Elemento | Nombre acordado |
+|---|---|
+| Región | `us-east-1` |
+| Prefijo de recursos | `ceiba` |
+| Bucket de datos | `ceiba-lakehouse-<id_cuenta>` con carpetas `landing/`, `bronze/`, `silver/`, `gold/` |
+| Bucket de artefactos | `ceiba-artifacts-<id_cuenta>` con `scripts/` (jobs y Lambdas) y `athena-results/` |
+| Bases del Glue Data Catalog | `ceiba_landing`, `ceiba_bronze`, `ceiba_silver`, `ceiba_gold` |
+| Ruta landing | `landing/fuente=<fuente>/fecha_ingesta=AAAA-MM-DD/<archivo>` |
+| Ruta bronze | `bronze/<tabla>/fuente=<fuente>/lote=<lote>/` (Parquet) |
+| Ruta silver y gold | `silver/<tabla>/anio=AAAA/mes=MM/` y `gold/<tabla>/anio=AAAA/mes=MM/` (Parquet) |
+| Valores de `lote` | `full` (carga inicial desde Neon), `lote_01`, `lote_02`, `lote_03` |
+| Secretos | `ceiba/neon-oltp` y `ceiba/neon-dw`, JSON con `host`, `port`, `dbname`, `username`, `password` |
+| Tabla de control | DynamoDB `ceiba-etl-control`, llave `lote` (texto) |
+| Entrada del pipeline | `{"modo": "full" | "incremental", "lote": "lote_02"}` |
+| Carpetas del repo | `infra/`, `etl/jobs/`, `etl/lambdas/`, `sql/`, `api/`, `frontend/`, `docs/` |
 
 ## Reglas
 

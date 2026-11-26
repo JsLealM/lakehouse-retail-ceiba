@@ -36,7 +36,11 @@ Región: `us-east-1`. Sin VPC.
 - Las personas entran a la consola por "Equipo" (invitación por correo).
 - La consola vuelve a la región Ohio, que es la del proyecto. Los recursos se crean en us-east-1 con
   `provider "aws" { region = "us-east-1" }`. Para verlos: links con `?region=us-east-1`.
-- Límite de gasto: 25 USD/mes. Créditos: 120 USD. Meta del proyecto: 20 USD o menos.
+- Proyecto de AWS: "LakeHouse". Plan gratuito con 100 USD de créditos (vence el 25-may-2027): AWS no cobra a la
+  tarjeta; al acabarse los créditos la cuenta se detiene. Meta del proyecto: 20 USD o menos.
+- La cuenta solo permite 1 proyecto: NUNCA cerrar el proyecto "LakeHouse".
+- En el plan gratuito, activar AWS Organizations o IAM Identity Center borra los créditos: no hacerlo.
+- El MFA del propietario está en su perfil de AWS (Builder ID), no en IAM.
 
 ## Reglas
 

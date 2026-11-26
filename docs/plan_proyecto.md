@@ -60,7 +60,7 @@ A Gerente abre el tablero → B HTTPS a API Gateway (CORS + throttling) → C IA
 | `etl` | 5 jobs Glue, conexión JDBC |
 | `orchestration` | Step Function `pipeline_retail`, DynamoDB `etl_control` |
 | `api` | HTTP API (API Gateway), Lambda `api_kpis` |
-| `observability` | logs 7 días, Budgets 10 y 20 USD, alertas |
+| `observability` | logs 7 días, Budgets 10 y 20 USD (con `include_credit = false`), tema SNS `ceiba-alertas` con suscripción por correo |
 
 Fuera de Terraform: los 2 proyectos de Neon y el front (Vercel/Render).
 
@@ -84,7 +84,7 @@ HTTPS + CORS solo al dominio del front + throttling · `aws_lambda_permission` e
 7. **Cumplimiento:** venta real vs. meta mensual
 8. **Productos:** top categorías y marcas, peso de la marca propia
 
-**Filtros:** periodo, zona, departamento, formato de tienda, canal. Además: responsive, estados de carga y de error.
+**Filtros:** periodo, zona, departamento, formato de tienda, canal. Además: responsive, estados de carga y de error. **Usuarios (PDF, pág. 8):** gerente general (país), gerente de zona (Caribe, Andina…) y administrador de tienda (su punto de venta).
 
 ### 1.8 Rúbrica (7 criterios, nivel 1–4)
 

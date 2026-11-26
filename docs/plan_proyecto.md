@@ -154,7 +154,7 @@ Leyenda: **Johan** = Infra · **Jhayder** = Datos · **Andres** = API/Front · �
 |-----|---|---|---|
 | **Mié 25** | ⭐ Cuenta AWS + MFA + usuarios IAM + **Budget manual de 5/10/20 USD** (§5). Crear repo GitHub público con estructura (§7) | ⭐ Crear Neon proyecto 1 (us-east-1), **restaurar dump**, verificar conteos. Bajar imagen Docker de Glue | Leer arquitectura completa. Crear Neon proyecto 2. Elegir stack front y crear proyecto Next.js |
 | **Jue 26** | Terraform: backend, `storage`, `security` (roles + secretos) | Job `extract_neon` en local (leer tablas por JDBC → Parquet/CSV) | Wireframe del tablero (8 preguntas + filtros). Proyecto en Vercel |
-| **Vie 27** | `catalog` (bases + crawlers + workgroup Athena), `observability` (budgets en TF, logs 7 días). **`terraform apply`** | `to_bronze` en local: columnas de control + `_hash_registro` | Prototipo con datos mock: tarjetas KPI, 2–3 gráficas, mapa |
+| **Vie 27** | `catalog` (bases + crawlers + workgroup Athena), `observability` (budgets en TF, logs 7 días). **`terraform apply`** | `to_bronze` en local: columnas de control + `_hash_registro`. Tras el `apply` de Johan: probar Glue → Neon sin VPC en AWS (#5) | Prototipo con datos mock: tarjetas KPI, 2–3 gráficas, mapa |
 | **Sáb 28** | `ingestion`: Lambdas `ingest_drive` + `xlsx_to_csv`. Subir lote_01, lote_02 y catálogos a landing | ⭐ Correr `extract_neon` **una sola vez** en AWS → landing. Correr `to_bronze` en AWS | DDL del esquema `dw` en Neon 2 (basado en el diagrama estrella) |
 | **Dom 29** | Crawlers sobre landing/bronze; queries de conteo en Athena | Empezar `to_silver` en local con lote_01 (ya hay tiempo muerto) | Pulir prototipo; desplegar en Vercel |
 | **Lun 30** | **📦 Entrega Avance 1**: capturas de Neon, `terraform apply`, S3 landing/bronze, Athena, link del prototipo | | |
@@ -165,8 +165,8 @@ Leyenda: **Johan** = Infra · **Jhayder** = Datos · **Andres** = API/Front · �
 
 | Día | Johan (Infra) | Jhayder (Datos) | Andres (API/Front) |
 |-----|---|---|---|
-| **Lun 30** | Módulo `etl` en TF (5 jobs, 2 workers G.1X, timeout) | ⭐ `to_silver`: dedupe (hash + última versión por `updated_at`), tipado, DANE con `lpad`, cruce DIVIPOLA, lote_02 con explode | Lambda `api_kpis` (1er endpoint: `/kpis/resumen`) leyendo secreto |
-| **Mar 01** | Módulo `api` en TF (HTTP API, CORS, throttling, `aws_lambda_permission`) | ⭐ `to_gold`: dimensiones + hechos + llaves sustitutas + `dim_fecha` | `load_serving` con B; carga a Neon dw |
+| **Lun 30** | Módulo `etl` en TF (5 jobs, 2 workers G.1X, timeout) | ⭐ `to_silver`: dedupe (hash + última versión por `updated_at`), tipado, DANE con `lpad`, cruce DIVIPOLA, lote_02 con explode | Lambda `api_kpis` (1er endpoint: `/kpis/resumen`) leyendo secreto; se desarrolla con filas de prueba en `dw` hasta que llegue `load_serving` |
+| **Mar 01** | Módulo `api` en TF (HTTP API, CORS, throttling, `aws_lambda_permission`) | ⭐ `to_gold`: dimensiones + hechos + llaves sustitutas + `dim_fecha`, y agregados `agg_ventas_dia/hora`, `agg_pagos_dia` (la API los necesita para el Avance 2) | `load_serving` con Jhayder; carga a Neon dw |
 | **Mié 02** | **📦 Entrega Avance 2**: conteos por capa en Athena, reglas de dedupe documentadas, gold en S3, endpoint respondiendo con curl | | |
 
 ### Semana 3 — Producto → **Sustentación (miércoles 09-dic)**
@@ -174,7 +174,7 @@ Leyenda: **Johan** = Infra · **Jhayder** = Datos · **Andres** = API/Front · �
 | Día | Johan (Infra) | Jhayder (Datos) | Andres (API/Front) |
 |-----|---|---|---|
 | **Jue 03** | `orchestration`: Step Function completa + DynamoDB `etl_control` | Lógica incremental (`¿nuevos?`), parser de **lote_03** regional + NOVEDADES | Resto de endpoints (ranking, mapa, canales/pagos, día×hora, metas, productos, tiendas abiertas) |
-| **Vie 04** | Retry/Catch/Fail en la Step Function; probar full + incremental | Agregados `agg_ventas_dia/hora`, `agg_pagos_dia`; `fact_metas` | Conectar tablero a la API real; filtros |
+| **Vie 04** | Retry/Catch/Fail en la Step Function; probar full + incremental | Margen para ajustes del lote 3 y pruebas de idempotencia | Conectar tablero a la API real; filtros |
 | **Sáb 05** | **Ensayo 1 completo**: `destroy` → `apply` → pipeline full → lote_01 → lote_02 | Corregir lo que falle | Mapa de calor, tiendas abiertas, responsive |
 | **Dom 06** | OpenAPI + README (cómo desplegar) | Documento de reglas de calidad + conteos | Estados de carga/error, UX |
 | **Lun 07** | **Ensayo 2**: procesar lote_03 como si fuera en vivo | Diagramas / README de datos | Pulido visual |

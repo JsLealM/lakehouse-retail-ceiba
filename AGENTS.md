@@ -58,8 +58,15 @@ Región: `us-east-2` (Ohio). Sin VPC.
 | Ruta bronze | `bronze/<tabla>/fuente=<fuente>/lote=<lote>/` (Parquet) |
 | Ruta silver y gold | `silver/<tabla>/anio=AAAA/mes=MM/` y `gold/<tabla>/anio=AAAA/mes=MM/` (Parquet) |
 | Valores de `lote` | `full` (carga inicial desde Neon), `lote_01`, `lote_02`, `lote_03` |
-| Secretos | `ceiba/neon-oltp` y `ceiba/neon-dw`, JSON con `host`, `port`, `dbname`, `username`, `password` |
+| Secretos | `ceiba/neon-oltp` y `ceiba/neon-dw`, JSON con `host`, `port`, `dbname`, `username`, `password`. `ceiba/neon-dw` trae además `username_lectura` (`api_lectura`) y `password_lectura`: la API usa esos (solo SELECT), `load_serving` usa `username` |
+| Roles IAM | `ceiba-glue-role`, `ceiba-lambda-ingest-role`, `ceiba-lambda-api-role`, `ceiba-sfn-role` (módulo security) |
+| Jobs de Glue (nombre en AWS) | `extract_neon`, `to_bronze`, `to_silver`, `to_gold`, `load_serving`; scripts en `s3://ceiba-artifacts-<id>/scripts/jobs/` |
 | Tabla de control | DynamoDB `ceiba-etl-control`, llave `lote` (texto) |
+| Lambdas (nombre en AWS) | `ceiba-ingest-drive`, `ceiba-xlsx-to-csv`, `ceiba-api-kpis` (el rol de Step Functions solo invoca `ceiba-*`) |
+| Crawlers | `ceiba-crawler-landing`, `ceiba-crawler-bronze`, `ceiba-crawler-silver`, `ceiba-crawler-gold` |
+| Conexión JDBC de Glue | `ceiba-neon-oltp` (tipo JDBC, sin VPC, `SECRET_ID = ceiba/neon-oltp`; módulo etl, como en el diagrama del profesor). Los jobs NO la adjuntan: con ella Glue correría en una VPC y necesitaría NAT (~32 USD/mes) |
+| Endpoints de la API | `GET /kpis/resumen`, `/kpis/ranking`, `/kpis/mapa`, `/kpis/tiendas-abiertas`, `/kpis/canales-pagos`, `/kpis/dia-hora`, `/kpis/metas`, `/kpis/productos` (ver `docs/diseno/preguntas_negocio.md`) |
+| Regiones de Neon | Neon 1 (OLTP, Jhayder) y Neon 2 (dw, Andres): los dos en us-east-2, igual que AWS. La conexión va por internet con TLS (`sslmode=require`) |
 | Entrada del pipeline | `{"modo": "full" | "incremental", "lote": "lote_02"}` |
 | Carpetas del repo | `infra/`, `etl/jobs/`, `etl/lambdas/`, `sql/`, `api/`, `frontend/`, `docs/` |
 

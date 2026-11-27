@@ -53,13 +53,13 @@ A Gerente abre el tablero → B HTTPS a API Gateway (CORS + throttling) → C IA
 
 | Módulo | Recursos |
 |--------|----------|
-| `security` | roles IAM (uno por servicio), secretos Neon (Secrets Manager) |
+| `security` | 4 roles IAM (uno por servicio: `ceiba-glue-role`, `ceiba-lambda-ingest-role`, `ceiba-lambda-api-role`, `ceiba-sfn-role`), 2 secretos Neon (`ceiba/neon-oltp`, `ceiba/neon-dw`) |
 | `storage` | bucket lakehouse, bucket athena/scripts (SSE-S3, bloqueo público) |
-| `catalog` | 4 crawlers, 4 bases Glue, workgroup Athena |
-| `ingestion` | Lambdas `ingest_drive`, `xlsx_to_csv` |
+| `catalog` | 4 crawlers (`ceiba-crawler-<capa>`), 4 bases Glue, workgroup Athena |
+| `ingestion` | Lambdas `ingest_drive`, `xlsx_to_csv` (en AWS: `ceiba-ingest-drive`, `ceiba-xlsx-to-csv`) |
 | `etl` | 5 jobs Glue, conexión JDBC |
 | `orchestration` | Step Function `pipeline_retail`, DynamoDB `etl_control` |
-| `api` | HTTP API (API Gateway), Lambda `api_kpis` |
+| `api` | HTTP API (API Gateway), Lambda `api_kpis` (en AWS: `ceiba-api-kpis`) |
 | `observability` | logs 7 días, Budgets 10 y 20 USD (con `include_credit = false`), tema SNS `ceiba-alertas` con suscripción por correo |
 
 Fuera de Terraform: los 2 proyectos de Neon y el front (Vercel/Render).
@@ -152,7 +152,7 @@ Leyenda: **Johan** = Infra · **Jhayder** = Datos · **Andres** = API/Front · �
 
 | Día | Johan (Infra) | Jhayder (Datos) | Andres (API/Front) |
 |-----|---|---|---|
-| **Mié 25** | ⭐ Cuenta AWS + MFA + usuarios IAM + **Budget manual de 5/10/20 USD** (§5). Crear repo GitHub público con estructura (§7) | ⭐ Crear Neon proyecto 1 (us-east-1), **restaurar dump**, verificar conteos. Bajar imagen Docker de Glue | Leer arquitectura completa. Crear Neon proyecto 2. Elegir stack front y crear proyecto Next.js |
+| **Mié 25** | ⭐ Cuenta AWS + MFA + usuarios IAM + **Budget manual de 5/10/20 USD** (§5). Crear repo GitHub público con estructura (§7) | ⭐ Crear Neon proyecto 1 (us-east-2, igual que Neon 2 y AWS), **restaurar dump**, verificar conteos. Bajar imagen Docker de Glue | Leer arquitectura completa. Crear Neon proyecto 2. Elegir stack front y crear proyecto Next.js |
 | **Jue 26** | Terraform: backend, `storage`, `security` (roles + secretos) | Job `extract_neon` en local (leer tablas por JDBC → Parquet/CSV) | Wireframe del tablero (8 preguntas + filtros). Proyecto en Vercel |
 | **Vie 27** | `catalog` (bases + crawlers + workgroup Athena), `observability` (budgets en TF, logs 7 días). **`terraform apply`** | `to_bronze` en local: columnas de control + `_hash_registro`. Tras el `apply` de Johan: probar Glue → Neon sin VPC en AWS (#5) | Prototipo con datos mock: tarjetas KPI, 2–3 gráficas, mapa |
 | **Sáb 28** | `ingestion`: Lambdas `ingest_drive` + `xlsx_to_csv`. Subir lote_01, lote_02 y catálogos a landing | ⭐ Correr `extract_neon` **una sola vez** en AWS → landing. Correr `to_bronze` en AWS | DDL del esquema `dw` en Neon 2 (basado en el diagrama estrella) |
@@ -210,7 +210,7 @@ Leyenda: **Johan** = Infra · **Jhayder** = Datos · **Andres** = API/Front · �
 | `extract_neon` se corre **una vez** (carga full) | Ahorra Glue y horas de cómputo de Neon |
 | Athena: siempre filtrar por partición; workgroup con límite de bytes escaneados | 5 USD/TB |
 | CloudWatch logs con retención de 7 días | Evita costo acumulado |
-| Secrets Manager: 2 secretos (Neon OLTP, Neon dw) | 0,40 USD/secreto/mes |
+| Secrets Manager: 2 secretos (Neon OLTP, Neon dw con el usuario que escribe y el de solo lectura `api_lectura`) | 0,40 USD/secreto/mes |
 | Hacer `terraform destroy` los días que no se trabaje si algo cobra por tiempo | Solo pagar lo usado |
 
 **Estimado del profe:** ≈ 10 USD (Glue ≈ 5, crawlers ≈ 3, Secrets ≈ 0,60, resto < 1).

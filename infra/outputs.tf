@@ -12,3 +12,13 @@ output "bucket_artifacts" {
   description = "Bucket con scripts/ y athena-results/"
   value       = module.storage.artifacts_bucket
 }
+
+output "glue_role_arn" {
+  description = "Rol que usan los jobs y crawlers de Glue"
+  value       = module.security.glue_role_arn
+}
+
+output "secretos_neon" {
+  description = "Nombres de los secretos de Neon (el valor se carga con put-secret-value)"
+  value       = ["${var.proyecto}/neon-oltp", "${var.proyecto}/neon-dw"]
+}

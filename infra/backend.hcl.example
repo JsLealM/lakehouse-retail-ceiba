@@ -1,0 +1,5 @@
+# Copia de ejemplo de backend.hcl (el real no se sube a Git).
+# Para generar el real, después del apply del bootstrap:
+#   terraform -chdir=bootstrap output -raw backend_hcl > backend.hcl
+bucket = "ceiba-tfstate-<id_cuenta>"
+region = "us-east-2"

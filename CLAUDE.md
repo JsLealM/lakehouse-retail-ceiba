@@ -28,7 +28,7 @@ Alertas: tema SNS `ceiba-alertas` (módulo observability) con suscripción por c
 Usuarios del tablero (PDF pág. 8): gerente general (país), gerente de zona y administrador de tienda.
 Fuente de verdad de los diagramas: `Proyecto final · Lakehouse retail en AWS.pdf` (19 páginas); la pág. 9 tiene la arquitectura de servicios completa.
 Infraestructura: Terraform en `infra/` con 8 módulos: security, storage, catalog, ingestion, etl, orchestration, api, observability.
-Región: `us-east-1`. Sin VPC.
+Región: `us-east-2` (Ohio). Sin VPC.
 
 ## La cuenta de AWS es distinta a los tutoriales
 
@@ -37,8 +37,8 @@ Región: `us-east-1`. Sin VPC.
 - Usuarios IAM: solo acceso programático (access keys para Terraform y CLI). No entran a la consola.
 - No hay grupos IAM: las políticas se asignan directo al usuario.
 - Las personas entran a la consola por "Equipo" (invitación por correo).
-- La consola vuelve a la región Ohio, que es la del proyecto. Los recursos se crean en us-east-1 con
-  `provider "aws" { region = "us-east-1" }`. Para verlos: links con `?region=us-east-1`.
+- La cuenta (modalidad "proyectos") tiene una política de la organización (SCP) que **niega todo fuera de
+  us-east-2 (Ohio)**, la región del proyecto. Todo se crea en us-east-2; en us-east-1 sale `AccessDenied ... explicit deny in a service control policy`.
 - Proyecto de AWS: "LakeHouse". Plan gratuito con 100 USD de créditos (vence el 25-may-2027): AWS no cobra a la
   tarjeta; al acabarse los créditos la cuenta se detiene. Meta del proyecto: 20 USD o menos.
 - La cuenta solo permite 1 proyecto: NUNCA cerrar el proyecto "LakeHouse".
@@ -49,7 +49,7 @@ Región: `us-east-1`. Sin VPC.
 
 | Elemento | Nombre acordado |
 |---|---|
-| Región | `us-east-1` |
+| Región | `us-east-2` (Ohio) |
 | Prefijo de recursos | `ceiba` |
 | Bucket de datos | `ceiba-lakehouse-<id_cuenta>` con carpetas `landing/`, `bronze/`, `silver/`, `gold/` |
 | Bucket de artefactos | `ceiba-artifacts-<id_cuenta>` con `scripts/` (jobs y Lambdas) y `athena-results/` |

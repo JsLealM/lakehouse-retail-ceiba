@@ -40,3 +40,6 @@ out/
 .vscode/
 .idea/
 .DS_Store
+
+# Configuración local del backend de Terraform (se genera con el bootstrap)
+backend.hcl

@@ -1,0 +1,66 @@
+{
+  "periodo": "2026-07",
+  "orden": "ventaNeta",
+  "tiendas": [
+    {
+      "tienda": "BOG001",
+      "municipio": "Bogotá",
+      "ventaNeta": 2542000000,
+      "ventaPorM2": 605238
+    },
+    {
+      "tienda": "MED001",
+      "municipio": "Medellín",
+      "ventaNeta": 2296000000,
+      "ventaPorM2": 588718
+    },
+    {
+      "tienda": "CAL001",
+      "municipio": "Cali",
+      "ventaNeta": 2132000000,
+      "ventaPorM2": 561053
+    },
+    {
+      "tienda": "BAQ001",
+      "municipio": "Barranquilla",
+      "ventaNeta": 2050000000,
+      "ventaPorM2": 569444
+    },
+    {
+      "tienda": "BOG002",
+      "municipio": "Bogotá",
+      "ventaNeta": 1558000000,
+      "ventaPorM2": 865556
+    },
+    {
+      "tienda": "CTG001",
+      "municipio": "Cartagena",
+      "ventaNeta": 1394000000,
+      "ventaPorM2": 733684
+    },
+    {
+      "tienda": "BUC001",
+      "municipio": "Bucaramanga",
+      "ventaNeta": 1230000000,
+      "ventaPorM2": 723529
+    },
+    {
+      "tienda": "ENV001",
+      "municipio": "Envigado",
+      "ventaNeta": 1148000000,
+      "ventaPorM2": 717500
+    },
+    {
+      "tienda": "CAL002",
+      "municipio": "Cali",
+      "ventaNeta": 1148000000,
+      "ventaPorM2": 717500
+    },
+    {
+      "tienda": "SOA001",
+      "municipio": "Soacha",
+      "ventaNeta": 1066000000,
+      "ventaPorM2": 710667
+    }
+  ]
+}

@@ -46,10 +46,13 @@ export interface FilaRanking {
   ventaPorM2: number;
 }
 
-// GET /kpis/mapa
+// GET /kpis/mapa: un punto por municipio
 export interface FilaMapa {
+  municipio: string;
   departamento: string;
   zona: string;
+  lat: number;
+  lng: number;
   ventaNeta: number;
   tiendas: number;
 }

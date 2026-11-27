@@ -1,0 +1,140 @@
+{
+  "periodo": "2026-07",
+  "municipios": [
+    {
+      "municipio": "Bogotá",
+      "departamento": "Cundinamarca",
+      "zona": "Andina",
+      "lat": 4.711,
+      "lng": -74.072,
+      "ventaNeta": 4674000000,
+      "tiendas": 3
+    },
+    {
+      "municipio": "Cali",
+      "departamento": "Valle del Cauca",
+      "zona": "Pacífico",
+      "lat": 3.451,
+      "lng": -76.532,
+      "ventaNeta": 3280000000,
+      "tiendas": 2
+    },
+    {
+      "municipio": "Medellín",
+      "departamento": "Antioquia",
+      "zona": "Andina",
+      "lat": 6.244,
+      "lng": -75.581,
+      "ventaNeta": 2788000000,
+      "tiendas": 2
+    },
+    {
+      "municipio": "Barranquilla",
+      "departamento": "Atlántico",
+      "zona": "Caribe",
+      "lat": 10.968,
+      "lng": -74.781,
+      "ventaNeta": 2542000000,
+      "tiendas": 2
+    },
+    {
+      "municipio": "Cartagena",
+      "departamento": "Bolívar",
+      "zona": "Caribe",
+      "lat": 10.391,
+      "lng": -75.479,
+      "ventaNeta": 1394000000,
+      "tiendas": 1
+    },
+    {
+      "municipio": "Bucaramanga",
+      "departamento": "Santander",
+      "zona": "Andina",
+      "lat": 7.119,
+      "lng": -73.122,
+      "ventaNeta": 1230000000,
+      "tiendas": 1
+    },
+    {
+      "municipio": "Envigado",
+      "departamento": "Antioquia",
+      "zona": "Andina",
+      "lat": 6.171,
+      "lng": -75.583,
+      "ventaNeta": 1148000000,
+      "tiendas": 1
+    },
+    {
+      "municipio": "Soacha",
+      "departamento": "Cundinamarca",
+      "zona": "Andina",
+      "lat": 4.579,
+      "lng": -74.217,
+      "ventaNeta": 1066000000,
+      "tiendas": 1
+    },
+    {
+      "municipio": "Pereira",
+      "departamento": "Risaralda",
+      "zona": "Eje Cafetero",
+      "lat": 4.813,
+      "lng": -75.696,
+      "ventaNeta": 984000000,
+      "tiendas": 1
+    },
+    {
+      "municipio": "Santa Marta",
+      "departamento": "Magdalena",
+      "zona": "Caribe",
+      "lat": 11.24,
+      "lng": -74.199,
+      "ventaNeta": 902000000,
+      "tiendas": 1
+    },
+    {
+      "municipio": "Villavicencio",
+      "departamento": "Meta",
+      "zona": "Orinoquía",
+      "lat": 4.142,
+      "lng": -73.626,
+      "ventaNeta": 820000000,
+      "tiendas": 1
+    },
+    {
+      "municipio": "Pasto",
+      "departamento": "Nariño",
+      "zona": "Pacífico",
+      "lat": 1.213,
+      "lng": -77.281,
+      "ventaNeta": 738000000,
+      "tiendas": 1
+    },
+    {
+      "municipio": "Tunja",
+      "departamento": "Boyacá",
+      "zona": "Andina",
+      "lat": 5.535,
+      "lng": -73.367,
+      "ventaNeta": 410000000,
+      "tiendas": 1
+    },
+    {
+      "municipio": "Montería",
+      "departamento": "Córdoba",
+      "zona": "Caribe",
+      "lat": 8.749,
+      "lng": -75.881,
+      "ventaNeta": 410000000,
+      "tiendas": 1
+    },
+    {
+      "municipio": "Manizales",
+      "departamento": "Caldas",
+      "zona": "Eje Cafetero",
+      "lat": 5.068,
+      "lng": -75.517,
+      "ventaNeta": 410000000,
+      "tiendas": 1
+    }
+  ]
+}

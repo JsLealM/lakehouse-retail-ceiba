@@ -60,6 +60,25 @@ export const TIENDAS: Tienda[] = BASE.map(
   },
 );
 
+// Coordenadas aproximadas de cada municipio (latitud, longitud) para el mapa.
+export const COORDENADAS: Record<string, [number, number]> = {
+  Bogotá: [4.711, -74.072],
+  Soacha: [4.579, -74.217],
+  Medellín: [6.244, -75.581],
+  Envigado: [6.171, -75.583],
+  Bucaramanga: [7.119, -73.122],
+  Tunja: [5.535, -73.367],
+  Barranquilla: [10.968, -74.781],
+  Cartagena: [10.391, -75.479],
+  "Santa Marta": [11.24, -74.199],
+  Montería: [8.749, -75.881],
+  Cali: [3.451, -76.532],
+  Pasto: [1.213, -77.281],
+  Pereira: [4.813, -75.696],
+  Manizales: [5.068, -75.517],
+  Villavicencio: [4.142, -73.626],
+};
+
 export const PERIODOS = [
   { valor: "2026-07", nombre: "Julio 2026", factor: 1.0 },
   { valor: "2026-08", nombre: "Agosto 2026", factor: 0.97 },

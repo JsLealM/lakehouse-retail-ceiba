@@ -6,6 +6,7 @@
 import {
   CANALES,
   CATEGORIAS,
+  COORDENADAS,
   DIAS,
   MARCAS,
   MEDIOS_PAGO,
@@ -78,15 +79,19 @@ export function obtenerRanking(f: Filtros): FilaRanking[] {
 export function obtenerMapa(f: Filtros): FilaMapa[] {
   const filas = new Map<string, FilaMapa>();
   for (const t of tiendasFiltradas(f)) {
-    const fila = filas.get(t.departamento) ?? {
+    const [lat, lng] = COORDENADAS[t.municipio] ?? [4.6, -74.1];
+    const fila = filas.get(t.municipio) ?? {
+      municipio: t.municipio,
       departamento: t.departamento,
       zona: t.zona,
+      lat,
+      lng,
       ventaNeta: 0,
       tiendas: 0,
     };
     fila.ventaNeta += ventaTienda(t, f).venta;
     fila.tiendas += 1;
-    filas.set(t.departamento, fila);
+    filas.set(t.municipio, fila);
   }
   return [...filas.values()].sort((a, b) => b.ventaNeta - a.ventaNeta);
 }

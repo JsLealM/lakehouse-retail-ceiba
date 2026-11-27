@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import {
   obtenerCanalesPagos,
@@ -22,6 +23,12 @@ import {
   Tarjeta,
   colorEscala,
 } from "./graficas";
+
+// Leaflet necesita el navegador (usa window), por eso el mapa se carga solo en el cliente.
+const Mapa = dynamic(() => import("./mapa"), {
+  ssr: false,
+  loading: () => <div className="h-80 w-full animate-pulse rounded-lg bg-slate-100" />,
+});
 
 const ROLES: { valor: Rol; nombre: string }[] = [
   { valor: "general", nombre: "Gerente general" },
@@ -96,7 +103,6 @@ export default function Tablero() {
   const ranking = [...datos.ranking]
     .sort((a, b) => (porM2 ? b.ventaPorM2 - a.ventaPorM2 : b.ventaNeta - a.ventaNeta))
     .slice(0, 10);
-  const maxMapa = Math.max(...datos.mapa.map((m) => m.ventaNeta), 1);
   const maxCelda = Math.max(...datos.diaHora.valores.flat(), 1);
 
   const departamentos =
@@ -288,29 +294,22 @@ export default function Tablero() {
               />
             </Tarjeta>
 
-            <Tarjeta titulo="Ventas por departamento" pregunta="P3" endpoint="GET /kpis/mapa">
-              <p className="text-xs text-slate-500">
-                En el tablero final esto será un mapa de Colombia; aquí se ve como mosaico.
-              </p>
-              <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                {datos.mapa.map((m) => {
-                  const p = m.ventaNeta / maxMapa;
-                  return (
-                    <li
-                      key={m.departamento}
-                      className="flex flex-col rounded-lg p-3 text-sm"
-                      style={{ background: colorEscala(p), color: p > 0.6 ? "#fff" : "#0f172a" }}
-                    >
-                      <span className="font-semibold">{m.departamento}</span>
-                      <span className="text-xs opacity-90">
-                        {m.zona} · {m.tiendas} {m.tiendas === 1 ? "tienda" : "tiendas"}
-                      </span>
-                      <span className="mt-1 tabular-nums">{pesosCortos(m.ventaNeta)}</span>
-                    </li>
-                  );
-                })}
+            <Tarjeta titulo="Mapa de calor de ventas" pregunta="P3" endpoint="GET /kpis/mapa">
+              <Mapa puntos={datos.mapa} />
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <LeyendaEscala />
+                <span className="text-xs text-slate-500">Tamaño del punto = venta neta</span>
+              </div>
+              <ul className="grid grid-cols-1 gap-x-8 gap-y-1 text-sm sm:grid-cols-2">
+                {datos.mapa.slice(0, 6).map((m) => (
+                  <li key={m.municipio} className="flex justify-between gap-2">
+                    <span className="truncate text-slate-700">
+                      {m.municipio} <span className="text-xs text-slate-500">{m.departamento}</span>
+                    </span>
+                    <span className="tabular-nums text-slate-700">{pesosCortos(m.ventaNeta)}</span>
+                  </li>
+                ))}
               </ul>
-              <LeyendaEscala />
             </Tarjeta>
           </div>
 

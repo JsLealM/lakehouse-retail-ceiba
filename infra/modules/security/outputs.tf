@@ -27,3 +27,8 @@ output "secret_neon_dw_arn" {
   description = "Secreto con la conexión a Neon 2 (dw)"
   value       = aws_secretsmanager_secret.neon_dw.arn
 }
+
+output "usuario_jhayder" {
+  description = "Usuario IAM de Jhayder (la access key se crea a mano, no queda en Terraform)"
+  value       = aws_iam_user.jhayder.name
+}

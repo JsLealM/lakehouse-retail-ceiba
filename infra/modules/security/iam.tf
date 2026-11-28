@@ -190,3 +190,85 @@ resource "aws_iam_role_policy" "sfn" {
   role   = aws_iam_role.sfn.id
   policy = data.aws_iam_policy_document.sfn.json
 }
+
+# ===========================================================================
+# 5. Usuario de Jhayder (data): no tiene consola, trabaja con la CLI (aws configure).
+# Solo lo que piden sus issues: correr y revisar los jobs (#8 a #13), lanzar crawlers y
+# contar en Athena (conteos antes/después de #9 y #11) y leer el lakehouse.
+# NO puede: escribir o borrar en S3, leer secretos, tocar IAM ni crear recursos.
+# La access key NO va en Terraform (quedaría en el estado): Johan la crea con
+#   aws iam create-access-key --user-name ceiba-jhayder
+# force_destroy: terraform destroy borra el usuario aunque tenga llaves creadas a mano.
+# ===========================================================================
+resource "aws_iam_user" "jhayder" {
+  name          = "${var.proyecto}-jhayder"
+  force_destroy = true
+}
+
+data "aws_iam_policy_document" "jhayder" {
+  # Lanzar, ver (duración y DPU) y detener los jobs.
+  statement {
+    sid       = "JobsGlue"
+    actions   = ["glue:StartJobRun", "glue:GetJobRun", "glue:GetJobRuns", "glue:BatchStopJobRun", "glue:GetJob"]
+    resources = ["arn:aws:glue:${local.arn_region}:job/*"]
+  }
+  # Listar qué jobs existen (estas dos acciones no aceptan un recurso específico).
+  statement {
+    sid       = "ListarJobs"
+    actions   = ["glue:GetJobs", "glue:ListJobs"]
+    resources = ["*"]
+  }
+  # Lanzar y ver los crawlers (cada corrida cobra mínimo 10 min: lanzarlos solo cuando cambie una capa).
+  statement {
+    sid       = "Crawlers"
+    actions   = ["glue:StartCrawler", "glue:StopCrawler", "glue:GetCrawler"]
+    resources = ["arn:aws:glue:${local.arn_region}:crawler/${var.proyecto}-crawler-*"]
+  }
+  # Leer el catálogo (lo necesita Athena para saber qué columnas tiene cada tabla).
+  statement {
+    sid = "LeerCatalogo"
+    actions = ["glue:GetDatabase", "glue:GetDatabases", "glue:GetTable", "glue:GetTables",
+    "glue:GetPartition", "glue:GetPartitions", "glue:BatchGetPartition"]
+    resources = [
+      "arn:aws:glue:${local.arn_region}:catalog",
+      "arn:aws:glue:${local.arn_region}:database/${var.proyecto}_*",
+      "arn:aws:glue:${local.arn_region}:table/${var.proyecto}_*/*",
+    ]
+  }
+  # Consultas en Athena, solo en el workgroup ceiba (tiene el tope de 1 GB por consulta).
+  statement {
+    sid = "Athena"
+    actions = ["athena:StartQueryExecution", "athena:GetQueryExecution", "athena:GetQueryResults",
+    "athena:StopQueryExecution", "athena:ListQueryExecutions", "athena:BatchGetQueryExecution", "athena:GetWorkGroup"]
+    resources = ["arn:aws:athena:${local.arn_region}:workgroup/${var.proyecto}"]
+  }
+  # Athena guarda los resultados con los permisos de quien consulta: necesita escribir en athena-results/.
+  statement {
+    sid       = "ResultadosAthena"
+    actions   = ["s3:GetObject", "s3:PutObject", "s3:AbortMultipartUpload"]
+    resources = ["${var.artifacts_bucket_arn}/athena-results/*"]
+  }
+  # Leer todas las capas del lakehouse (para revisar lo que dejan los jobs) y los scripts desplegados.
+  statement {
+    sid       = "LeerDatos"
+    actions   = ["s3:GetObject"]
+    resources = ["${var.lakehouse_bucket_arn}/*", "${var.artifacts_bucket_arn}/scripts/*"]
+  }
+  statement {
+    sid       = "ListarBuckets"
+    actions   = ["s3:ListBucket", "s3:GetBucketLocation"]
+    resources = [var.lakehouse_bucket_arn, var.artifacts_bucket_arn]
+  }
+  # Ver los logs de los jobs cuando fallan.
+  statement {
+    sid       = "LogsGlue"
+    actions   = ["logs:FilterLogEvents", "logs:GetLogEvents", "logs:DescribeLogStreams"]
+    resources = ["arn:aws:logs:${local.arn_region}:log-group:/aws-glue/*"]
+  }
+}
+
+resource "aws_iam_user_policy" "jhayder" {
+  name   = "permisos-ceiba"
+  user   = aws_iam_user.jhayder.name
+  policy = data.aws_iam_policy_document.jhayder.json
+}

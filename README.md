@@ -40,6 +40,28 @@ El seguimiento de tareas está en el tablero de GitHub Projects del repositorio.
 - Todo `terraform apply` se avisa antes en el chat del grupo.
 - Presupuesto máximo de AWS: 20 USD.
 
+## Ingesta de archivos a landing
+
+El profesor publica los lotes y catálogos en su Drive como un `.zip`. La Lambda `ceiba-ingest-drive` lo descarga, saca los archivos del lote pedido y los deja sin modificar en `landing/fuente=<lote>_<archivo>/fecha_ingesta=AAAA-MM-DD/`. Después, `ceiba-xlsx-to-csv` escribe un `.csv` al lado de cada catálogo Excel. El id del archivo de Drive de cada lote está en `etl/lambdas/ingest_drive/fuentes.json`.
+
+```bash
+aws lambda invoke --function-name ceiba-ingest-drive --cli-binary-format raw-in-base64-out \
+  --payload '{"lote": "lote_01"}' salida.json        # también lote_02, lote_03 y catalogos
+aws lambda invoke --function-name ceiba-xlsx-to-csv --cli-binary-format raw-in-base64-out \
+  --payload '{}' salida.json
+```
+
+Cada lote se carga **una sola vez**: si ya está en landing de otro día, `ceiba-ingest-drive` no lo vuelve a subir y responde `"ya_cargado": true` (otra copia con otra `fecha_ingesta` haría que `to_bronze` leyera las dos). Para recargarlo a propósito: `{"lote": "lote_01", "forzar": true}`, y borrar antes la carpeta vieja.
+
+Si el profesor publica el `lote_03` en otro archivo de Drive, se pasa su id sin cambiar el código: `{"lote": "lote_03", "drive_id": "<id>", "carpeta": "<carpeta dentro del zip>"}`.
+
+**Plan B** (si Drive bloquea la descarga): subir cada archivo a la misma ruta con la CLI y luego correr `ceiba-xlsx-to-csv`:
+
+```bash
+aws s3 cp lotes/lote_01/facturas.csv \
+  s3://ceiba-lakehouse-<id_cuenta>/landing/fuente=lote_01_facturas/fecha_ingesta=AAAA-MM-DD/facturas.csv
+```
+
 ## Cómo trabajar
 
 Tareas: [tablero del proyecto](https://github.com/users/JsLealM/projects/1). Al empezar una tarea, moverla a *In Progress*.

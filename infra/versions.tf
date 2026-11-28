@@ -8,5 +8,9 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 6.0" # cualquier 6.x, nunca un 7.0 que pueda romper el código
     }
+    archive = {
+      source  = "hashicorp/archive"
+      version = "~> 2.0" # empaqueta el código de las Lambdas en .zip
+    }
   }
 }

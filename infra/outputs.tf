@@ -27,3 +27,18 @@ output "sns_alertas_arn" {
   description = "Tema SNS de alertas"
   value       = module.observability.sns_alertas_arn
 }
+
+output "glue_bases" {
+  description = "Bases del catálogo"
+  value       = module.catalog.bases
+}
+
+output "crawlers" {
+  description = "Crawlers (sin horario: se lanzan a demanda)"
+  value       = module.catalog.crawlers
+}
+
+output "athena_workgroup" {
+  description = "Workgroup de Athena"
+  value       = module.catalog.athena_workgroup
+}

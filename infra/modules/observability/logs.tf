@@ -1,9 +1,9 @@
 # Grupos de logs con retención de 7 días (si no, CloudWatch los guarda para siempre y cobra).
 
-# Glue escribe en estos 3 grupos compartidos (ya existían: los creó la prueba de #5;
-# se importan en infra/imports.tf en vez de crearlos).
+# Glue escribe en estos grupos compartidos (los 3 de jobs ya existían: los creó la prueba de #5;
+# se importan en infra/imports.tf en vez de crearlos; el de crawlers se crea aquí antes de su primera corrida).
 resource "aws_cloudwatch_log_group" "glue" {
-  for_each = toset(["/aws-glue/jobs/output", "/aws-glue/jobs/error", "/aws-glue/jobs/logs-v2"])
+  for_each = toset(["/aws-glue/jobs/output", "/aws-glue/jobs/error", "/aws-glue/jobs/logs-v2", "/aws-glue/crawlers"])
 
   name              = each.value
   retention_in_days = 7

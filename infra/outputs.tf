@@ -22,3 +22,8 @@ output "secretos_neon" {
   description = "Nombres de los secretos de Neon (el valor se carga con put-secret-value)"
   value       = ["${var.proyecto}/neon-oltp", "${var.proyecto}/neon-dw"]
 }
+
+output "sns_alertas_arn" {
+  description = "Tema SNS de alertas"
+  value       = module.observability.sns_alertas_arn
+}

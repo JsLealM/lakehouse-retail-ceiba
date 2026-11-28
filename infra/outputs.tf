@@ -43,6 +43,11 @@ output "athena_workgroup" {
   value       = module.catalog.athena_workgroup
 }
 
+output "glue_jobs" {
+  description = "Jobs de Glue (se lanzan a demanda)"
+  value       = module.etl.jobs
+}
+
 output "lambdas_ingesta" {
   description = "Lambdas de ingesta (se prueban con {\"lote\": \"lote_01\"} y {})"
   value       = module.ingestion.lambdas

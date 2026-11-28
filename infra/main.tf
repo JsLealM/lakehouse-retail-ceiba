@@ -49,3 +49,13 @@ module "ingestion" {
   lakehouse_bucket = module.storage.lakehouse_bucket
   role_arn         = module.security.lambda_ingest_role_arn
 }
+
+# #40: jobs de Glue con sus scripts en S3 (por ahora extract_neon y to_bronze).
+module "etl" {
+  source = "./modules/etl"
+
+  proyecto         = var.proyecto
+  lakehouse_bucket = module.storage.lakehouse_bucket
+  artifacts_bucket = module.storage.artifacts_bucket
+  glue_role_arn    = module.security.glue_role_arn
+}

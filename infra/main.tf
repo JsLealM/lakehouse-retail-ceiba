@@ -29,3 +29,13 @@ module "observability" {
   correos_alertas = var.correos_alertas
   lambdas         = ["${var.proyecto}-ingest-drive", "${var.proyecto}-xlsx-to-csv", "${var.proyecto}-api-kpis"]
 }
+
+# #34: 4 bases del Glue Data Catalog, un crawler por capa y el workgroup de Athena.
+module "catalog" {
+  source = "./modules/catalog"
+
+  proyecto         = var.proyecto
+  lakehouse_bucket = module.storage.lakehouse_bucket
+  artifacts_bucket = module.storage.artifacts_bucket
+  glue_role_arn    = module.security.glue_role_arn
+}

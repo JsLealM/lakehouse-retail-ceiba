@@ -19,3 +19,13 @@ module "security" {
   lakehouse_bucket_arn = module.storage.lakehouse_bucket_arn
   artifacts_bucket_arn = module.storage.artifacts_bucket_arn
 }
+
+# #35: budgets de 10 y 20 USD, tema SNS de alertas y logs con 7 días.
+module "observability" {
+  source = "./modules/observability"
+
+  proyecto        = var.proyecto
+  account_id      = data.aws_caller_identity.actual.account_id
+  correos_alertas = var.correos_alertas
+  lambdas         = ["${var.proyecto}-ingest-drive", "${var.proyecto}-xlsx-to-csv", "${var.proyecto}-api-kpis"]
+}

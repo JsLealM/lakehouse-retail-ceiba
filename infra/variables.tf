@@ -9,3 +9,8 @@ variable "proyecto" {
   type        = string
   default     = "ceiba"
 }
+
+variable "correos_alertas" {
+  description = "Correos de los integrantes para las alertas. Se escriben en terraform.tfvars (ignorado por Git)"
+  type        = list(string)
+}

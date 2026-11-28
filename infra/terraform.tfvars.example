@@ -1,0 +1,6 @@
+# Copia este archivo como terraform.tfvars (ese NO se sube a Git) y pon los correos reales.
+correos_alertas = [
+  "correo-johan@ejemplo.com",
+  "correo-jhayder@ejemplo.com",
+  "correo-andres@ejemplo.com",
+]

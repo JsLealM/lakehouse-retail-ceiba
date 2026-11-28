@@ -39,3 +39,13 @@ module "catalog" {
   artifacts_bucket = module.storage.artifacts_bucket
   glue_role_arn    = module.security.glue_role_arn
 }
+
+# #37: Lambdas ingest_drive (Drive del profesor -> landing) y xlsx_to_csv (catálogos Excel -> CSV).
+module "ingestion" {
+  source = "./modules/ingestion"
+
+  proyecto         = var.proyecto
+  region           = var.region
+  lakehouse_bucket = module.storage.lakehouse_bucket
+  role_arn         = module.security.lambda_ingest_role_arn
+}

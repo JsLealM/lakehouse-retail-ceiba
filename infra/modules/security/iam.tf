@@ -93,6 +93,18 @@ data "aws_iam_policy_document" "lambda_ingest" {
     actions   = ["s3:GetObject", "s3:PutObject"]
     resources = ["${var.lakehouse_bucket_arn}/landing/*"]
   }
+
+  # xlsx_to_csv busca los .xlsx de los catálogos: puede listar el bucket, pero solo dentro de landing/.
+  statement {
+    sid       = "ListarLanding"
+    actions   = ["s3:ListBucket"]
+    resources = [var.lakehouse_bucket_arn]
+    condition {
+      test     = "StringLike"
+      variable = "s3:prefix"
+      values   = ["landing/*"]
+    }
+  }
 }
 
 resource "aws_iam_role_policy" "lambda_ingest" {

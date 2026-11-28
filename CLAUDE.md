@@ -54,10 +54,10 @@ Región: `us-east-2` (Ohio). Sin VPC.
 | Bucket de datos | `ceiba-lakehouse-<id_cuenta>` con carpetas `landing/`, `bronze/`, `silver/`, `gold/` |
 | Bucket de artefactos | `ceiba-artifacts-<id_cuenta>` con `scripts/` (jobs y Lambdas) y `athena-results/` |
 | Bases del Glue Data Catalog | `ceiba_landing`, `ceiba_bronze`, `ceiba_silver`, `ceiba_gold` |
-| Ruta landing | `landing/fuente=<fuente>/fecha_ingesta=AAAA-MM-DD/<archivo>` |
+| Ruta landing | `landing/fuente=<fuente>/fecha_ingesta=AAAA-MM-DD/<archivo>`. `<fuente>` = `neon_<tabla>` (extract_neon) o `<lote>_<archivo>` en minúscula sin extensión (ingest_drive), p. ej. `fuente=lote_01_facturas`, `fuente=catalogos_metas_venta`: una fuente por archivo = una tabla en el crawler |
 | Ruta bronze | `bronze/<tabla>/fuente=<fuente>/lote=<lote>/` (Parquet) |
 | Ruta silver y gold | `silver/<tabla>/anio=AAAA/mes=MM/` y `gold/<tabla>/anio=AAAA/mes=MM/` (Parquet) |
-| Valores de `lote` | `full` (carga inicial desde Neon), `lote_01`, `lote_02`, `lote_03` |
+| Valores de `lote` | `full` (carga inicial desde Neon), `lote_01`, `lote_02`, `lote_03`, `catalogos` |
 | Secretos | `ceiba/neon-oltp` y `ceiba/neon-dw`, JSON con `host`, `port`, `dbname`, `username`, `password`. `ceiba/neon-dw` trae además `username_lectura` (`api_lectura`) y `password_lectura`: la API usa esos (solo SELECT), `load_serving` usa `username` |
 | Roles IAM | `ceiba-glue-role`, `ceiba-lambda-ingest-role`, `ceiba-lambda-api-role`, `ceiba-sfn-role` (módulo security) |
 | Jobs de Glue (nombre en AWS) | `extract_neon`, `to_bronze`, `to_silver`, `to_gold`, `load_serving`; scripts en `s3://ceiba-artifacts-<id>/scripts/jobs/` |

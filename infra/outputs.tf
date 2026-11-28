@@ -42,3 +42,8 @@ output "athena_workgroup" {
   description = "Workgroup de Athena"
   value       = module.catalog.athena_workgroup
 }
+
+output "lambdas_ingesta" {
+  description = "Lambdas de ingesta (se prueban con {\"lote\": \"lote_01\"} y {})"
+  value       = module.ingestion.lambdas
+}
